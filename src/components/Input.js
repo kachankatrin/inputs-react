@@ -10,7 +10,7 @@ class Input extends React.Component {
       value: e.target.value,
       error: ''
     })
-    this.props.handleChange(e.target.value)
+    this.props.handleChange(e.target.value, e.target.name)
     this.handleBlur()
   }
   handleBlur = () => {

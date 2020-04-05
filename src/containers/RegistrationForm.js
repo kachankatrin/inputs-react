@@ -5,6 +5,19 @@ import Checkbox from '../components/CheckboxGroup';
 import RadioButton from '../components/RadioGroups';
 import Button from '../utils/button';
 import SelectInp from '../components/SelectGroup';
+import CheckboxGroup from '../components/checkbox1';
+import RadioGroup from '../components/radiogroup';
+import Table from '../components/Table';
+
+// const data = {};
+let checkMe;
+const TableData = [
+  {id: 1, film: 'Once Upon a Time in Hollywood', hero: 'Rick Dalton', genre: 'comedy-drama'},
+  {id: 2, film: 'Lord of the Rings', hero: 'Frodo', genre:'aventure-fantasy'},
+  {id: 3, film: 'Rabbit Jojo', hero: 'Jojo', genre:'drama'},
+  {id: 4, film: 'Harry Potter and the Order of the Phoenix', hero: 'Harry Potter', genre:'fantasy'},
+  {id: 5, film: 'Birds of Prey', hero: 'Harley Quinn', genre:'action-adventure-criminal'}
+]
 class RegistrationForm extends React.Component {
   state = {
     formData: {
@@ -28,7 +41,8 @@ class RegistrationForm extends React.Component {
       ],
       buttonSkills: true,
       sex: '',
-      country: 'Ukraine'
+      country: 'Ukraine',
+      data: TableData
     }
   };
 
@@ -56,11 +70,11 @@ class RegistrationForm extends React.Component {
         hobbies,
       }
     })
-    hobbiesCheckedAll.length ? hobbies.forEach(item => {
-      if (item.value === e.target.value) {
-        item.isChecked = e.target.checked;
-      }
-    }) : this.handleRemoveHobby()
+    // hobbiesCheckedAll.length ? hobbies.forEach(item => {
+    //   if (item.value === e.target.value) {
+    //     item.isChecked = e.target.checked;
+    //   }
+    // }) : this.handleRemoveHobby()
     // this.handleRemoveHobby()
   }
 handleRemoveHobby = () => {
@@ -147,29 +161,30 @@ handleRemoveSkill = () => {
 
 
 
-  handleNameChange = (name) => {
+  handleFieldChange = (value, fieldName) => {
+    console.log(fieldName, 'fieldNan')
     this.setState({
       formData: {
         ...this.state.formData, 
-        name,
+        [fieldName]: value,
       }
     })
   }
-  handleSurnameChange = (surname) => {
-    this.setState({
-      formData: {
-        ...this.state.formData, 
-        surname,
-      }})
-  }
-  handleAgeChange = (age) => {
-    this.setState({
-      formData: {
-        ...this.state.formData, 
-        age
-      }
-    })
-  }
+  // handleSurnameChange = (surname, fieldName) => {
+  //   this.setState({
+  //     formData: {
+  //       ...this.state.formData, 
+  //       [fieldName]: surname,
+  //     }})
+  // }
+  // handleAgeChange = (age, fieldName) => {
+  //   this.setState({
+  //     formData: {
+  //       ...this.state.formData, 
+  //       [fieldName]: age
+  //     }
+  //   })
+  // }
   handleChangeRadio = (e) => {
     console.log(e.target)
     this.setState({
@@ -188,14 +203,51 @@ handleRemoveSkill = () => {
       }
     })
   }
+ 
+  handleSexSelect = (e) => {
+    this.setState({
+      formData: {
+        ...this.state.formData,
+        sex: e.target.value
+      }
+    }
+    // () => console.log(this.state.formData, e.target.value)
+    )
+    // console.log(e.target.value, this.state.formData.sex)
+  }
 
+  handleHobbySelect = (hobbies) => {
+    this.setState({
+      formData: {
+      ...this.state.formData,
+      hobbies
+      }
+    })
+
+  }
   render() {
+    // checkMe = this.state.formData.data.map(item => item.select = <CheckboxGroup values={
+    //   [{label: item.name, value: item.id}]
+    // } handleChange={this.handleFieldChange}/>);
+
+    checkMe = <CheckboxGroup values={
+      this.state.formData.data.map(item => {
+        return {label: item.name, value: item.id}
+      })
+    } handleChange={this.handleFieldChange}/>;
+    console.log(checkMe)
+
     return (
       <div>
         <div>
-          <Input name='name' handleChange={this.handleNameChange} validate={validateInputText} value={this.state.formData.name}/>
-          <Input name='surname' handleChange={this.handleSurnameChange} validate={validateInputText} />
-          <Input name='age' handleChange ={this.handleAgeChange} validate={validateInputNumber}/>
+          <Input name='name' handleChange={this.handleFieldChange} validate={validateInputText} value={this.state.formData.name}/>
+          <Input name='surname' handleChange={this.handleFieldChange} validate={validateInputText} />
+          <Input name='age' handleChange ={this.handleFieldChange} validate={validateInputNumber}/>
+          <RadioGroup name="sex" values={[{label: 'Male', value: 'male'}, {label: 'Female', value: 'female'}]} handleChange={this.handleSexSelect}/>
+          <CheckboxGroup name='hobbies' 
+          values={
+            [{label: 'Snowboarding', value: 'snowboarding'}, {label: 'Bunjo jumping', value: 'banjo'}, {label: 'Makrame', value: 'makrame'}]
+          } handleChange={this.handleFieldChange}/>
           My Registration form
         </div>
 
@@ -237,6 +289,9 @@ handleRemoveSkill = () => {
         <div>
           <SelectInp value={this.state.formData.country} handleChange={this.handleSelect}/>
         </div>   
+        <div>
+          <Table data={this.state.formData.data}/>
+        </div>
       </div>
     )
   }
